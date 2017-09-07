@@ -1,0 +1,233 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>br.com.nuclearis</groupId>
+  <artifactId>integracao-service</artifactId>
+  <version>1.0.0.0</version>
+  <packaging>war</packaging>
+  
+  <properties>
+		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+		<version.java>1.8</version.java>
+		<version.maven-compiler-plugin>3.5</version.maven-compiler-plugin>
+		<version.spring>4.3.2.RELEASE</version.spring>
+		<version.spring.webflow>2.4.1.RELEASE</version.spring.webflow>
+		<version.apache.log4j>1.2.17</version.apache.log4j>
+		<version.apache.commons-logging>1.1.1</version.apache.commons-logging>
+		<version.hibernate>4.3.11.Final</version.hibernate>
+		<version.hibernate-validator>5.1.3.Final</version.hibernate-validator>
+		<version.slf4j-log4j12>1.7.12</version.slf4j-log4j12>
+		<version.postgres>9.4-1201-jdbc41</version.postgres>
+		<version.oracle>11.2.0.3</version.oracle>
+		<version.jackson>2.7.0</version.jackson>
+		<version.jackson.mapper.asl>1.9.13</version.jackson.mapper.asl>
+		<version.jackson.datatype.hibernate4>2.5.3</version.jackson.datatype.hibernate4>
+		<version.servlet-api>3.1.0</version.servlet-api>
+		<version.spring-mobile>1.1.4.RELEASE</version.spring-mobile>
+		<version.commons-lang>3.4</version.commons-lang>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>oracle</id>
+			<name>OJDBC6 Lib</name>
+			<url>http://www.datanucleus.org/downloads/maven2/</url>
+			<layout>default</layout>
+		</repository>
+
+		<repository>
+		   <id>oss-snapshots</id>
+		   <snapshots>
+		      <enabled>true</enabled>
+		   </snapshots>
+		   <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
+
+
+	<dependencies>
+		<!-- *** Spring *** -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+
+
+		<!-- Spring Webflow -->
+		<dependency>
+			<groupId>org.springframework.webflow</groupId>
+			<artifactId>spring-faces</artifactId>
+			<version>${version.spring.webflow}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.webflow</groupId>
+			<artifactId>spring-binding</artifactId>
+			<version>${version.spring.webflow}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.webflow</groupId>
+			<artifactId>spring-js</artifactId>
+			<version>${version.spring.webflow}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.webflow</groupId>
+			<artifactId>spring-webflow</artifactId>
+			<version>${version.spring.webflow}</version>
+		</dependency>
+		
+		<dependency>
+            <groupId>org.springframework.mobile</groupId>
+            <artifactId>spring-mobile-device</artifactId>
+            <version>${version.spring-mobile}</version>
+        </dependency>
+        
+        <dependency>
+		   <groupId>commons-fileupload</groupId>
+		   <artifactId>commons-fileupload</artifactId>
+		   <version>1.3.2</version> <!-- makesure correct version here -->
+		</dependency>
+
+
+		<!-- *** Apache *** -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${version.apache.commons-logging}</version>
+		</dependency>
+		
+		<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${version.commons-lang}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${version.apache.log4j}</version>
+		</dependency>
+
+		<!-- *** Hibernate *** -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${version.hibernate}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+			<version>${version.hibernate}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>${version.hibernate}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${version.hibernate-validator}</version>
+		</dependency>
+
+		<!-- *** Postgres *** -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${version.postgres}</version>
+		</dependency>
+
+		<!-- *** Oracle 11G *** -->
+		<dependency>
+   			 <groupId>oracle</groupId>
+    		<artifactId>ojdbc6</artifactId>
+  		 	 <version>11.2.0.3</version>
+		</dependency>
+
+
+		<!-- *** Outros *** -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${version.servlet-api}</version>
+		</dependency>
+
+
+		<!-- Jackson -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${version.jackson}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${version.jackson}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${version.jackson}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${version.jackson.mapper.asl}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate4</artifactId>
+			<version>${version.jackson.datatype.hibernate4}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${version.maven-compiler-plugin}</version>
+					<configuration>
+						<source>${version.java}</source>
+						<target>${version.java}</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+  
+</project>

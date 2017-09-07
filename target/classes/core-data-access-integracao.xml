@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:security="http://www.springframework.org/schema/security" xmlns:task="http://www.springframework.org/schema/task" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:oxm="http://www.springframework.org/schema/oxm" xmlns:aws-context="http://www.springframework.org/schema/cloud/aws/context" xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+
+	xsi:schemaLocation="
+	    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd 
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd
+		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+		http://www.springframework.org/schema/cloud/aws/context http://www.springframework.org/schema/cloud/spring-cloud-aws-context.xsd">
+		
+	<context:component-scan base-package="br.com.nuclearis" />
+	
+	<context:annotation-config />
+	<task:annotation-driven />
+	
+	<!-- *********************************************************************************************************************** -->
+	<!-- *** PROPERTIES *** -->
+	<!-- *********************************************************************************************************************** -->
+	<bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+			<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+			<property name="searchSystemEnvironment" value="true"/>
+			<property name="ignoreUnresolvablePlaceholders" value="true"/>
+			<property name="locations" >
+				<list>
+            		<value>#{systemProperties['IntegracaoCaminhoPastaConfiguracao']}/integracao-config.properties</value>
+            		<value>#{systemProperties['IntegracaoCaminhoPastaConfiguracao']}/configuracao.properties</value>
+        		</list>
+			</property>
+	</bean>	
+	
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+   	 	<property name="staticMethod" value="br.com.nuclearis.integracao.util.PropertyUtil.setArguments"/>
+	    <property name="arguments">
+	        <list>
+	            <value>${rest.host.nuclearis}</value>
+	            <value>${rest.porta.nuclearis}</value>
+	            <value>${rest.context.nuclearis}</value>
+	            <value>${integracao.view.pacientes}</value>
+	            <value>${integracao.view.vagas}</value>
+	            <value>${integracao.view.proibicoes}</value>
+	            <value>${integracao.view.convenios}</value>
+	            <value>${integracao.view.planos}</value>
+	            <value>${integracao.tabela.agendamento}</value>
+	            <value>${integracao.tabela.atendimentos}</value>
+	            
+	        </list>
+	   	</property>
+	</bean>
+	
+	<!-- Definir o gerenciador de transações com o banco de dados para a integração -->
+	<tx:annotation-driven transaction-manager="txManagerNuclearisInt" /> 
+
+	<!-- *********************************************************************************************************************** -->
+	<!-- *** TRANSAÇÕES *** -->
+	<!-- *********************************************************************************************************************** -->
+
+	<!-- *** Transações de Banco de dados para Integração *** -->
+	<bean id="txManagerNuclearisInt" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactoryNuclearisInt" />
+	</bean> 
+
+	<!-- *********************************************************************************************************************** -->
+	<!-- *** DATASOURCE *** -->
+	<!-- *********************************************************************************************************************** -->
+
+	<!-- *** DataSource para a conexão com o banco de dados do Sistema de Integracao *** -->
+	 <bean id="NuclearisIntDS" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${nuclearis.core.data.access.datasource.driverClassName.int}" />
+		<property name="jdbcUrl" value="${nuclearis.core.data.access.datasource.url.int}" />
+		<property name="user" value="${nuclearis.core.data.access.datasource.usuario.int}" />
+		<property name="password" value="${nuclearis.core.data.access.datasource.senha.int}" />
+		<property name="minPoolSize" value="${nuclearis.core.data.access.datasource.cache.minimo.int}" />
+		<property name="maxPoolSize" value="${nuclearis.core.data.access.datasource.cache.maximo.int}" />
+		<property name="preferredTestQuery" value="${nuclearis.core.data.access.datasource.preferredTestQuery.int}" />
+		<property name="maxIdleTime" value="3600" />
+		<property name="testConnectionOnCheckin" value="true" />
+		<property name="unreturnedConnectionTimeout" value="300" />
+		<property name="acquireRetryAttempts" value="3" />
+		<property name="acquireRetryDelay" value="10000" />
+		<property name="breakAfterAcquireFailure" value="true" />
+	</bean> 
+
+	<!-- *** PERSISTÊNCIA *** -->
+	<bean class="org.springframework.orm.hibernate4.HibernateExceptionTranslator" />
+
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+
+	<!-- *** SESSION FACTORY PARA ACESSO AO BANCO DE DADOS DA INTEGRAÇÃO *** -->
+	   <bean id="sessionFactoryNuclearisInt" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+
+		<property name="dataSource" ref="NuclearisIntDS" />
+
+		<property name="hibernateProperties">
+			<props>
+
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>				
+				<prop key="javax.persistence.validation.mode">${javax.persistence.validation.mode}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<prop key="hibernate.current_session_context_class">${hibernate.current_session_context_class}</prop>
+<!-- 				<prop key="hibernate.cache.provider_configuration">${hibernate.cache.provider_configuration}</prop> -->
+<!-- 				<prop key="hibernate.cache.use_minimal_puts">${hibernate.cache.use_minimal_puts}</prop> -->
+<!-- 				<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop> -->
+<!-- 				<prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop> -->
+<!-- 				<prop key="hibernate.cache.use_structured_entries">${hibernate.cache.use_structured_entries}</prop> -->
+<!-- 				<prop key="hibernate.cache.region.factory_class">${hibernate.cache.region.factory_class}</prop> -->
+				<prop key="hibernate.id.new_generator_mappings">${hibernate.id.new_generator_mappings}</prop>
+				<prop key="hibernate.event.merge.entity_copy_observer">${hibernate.event.merge.entity_copy_observer}</prop>
+				
+			</props>
+		</property>
+	</bean> 
+	
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+	
+</beans>
